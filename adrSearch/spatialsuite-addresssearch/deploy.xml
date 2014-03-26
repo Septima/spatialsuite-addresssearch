@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<deploy>
+   <version>0.1</version>
+   <stoponerror>true</stoponerror>
+  
+   <makedir dir="[cbinfo.wwwroot.dir]/jsp/modules/adrsearch"/>
+   <copyfile fromfile="[module:adrsearch.dir]/jsp/build.jsp" tofile="[cbinfo.wwwroot.dir]/jsp/modules/adrsearch/build.jsp"/>
+<!--    <copyfile fromfile="[module:adrsearch.dir]/jsp/query.jsp" tofile="[cbinfo.wwwroot.dir]/jsp/modules/adrsearch/query.jsp"/> -->
+
+<!--   <makedir dir="[cbinfo.wwwroot.dir]/modules/adrsearch/js"/> -->
+<!--   <copyfile fromfile="[module:adrsearch.dir]/js/adrsearcher.js" tofile="[cbinfo.wwwroot.dir]/modules/adrsearch/js/adrsearcher.js"/> -->
+</deploy>
