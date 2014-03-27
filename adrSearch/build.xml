@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="adrSearch" default="build" basedir=".">
+	<property name="version" value="0.1" />
+	<property name="src.dir" location="${basedir}/src" />
+	<property name="bin.dir" location="${basedir}/bin" />
+	<property name="build.dir" location="${basedir}/build/${version}" />
+	<property name="jarfilename" value="custom-dk.septima.spatialsuite.adrsearch-${version}.jar" />
+
+	<target name="build">
+
+		<echo>Cleaning build...</echo>
+		<delete dir="${build.dir}" />
+		<echo>Done.</echo>
+
+		
+		<echo>Creating directory: ${build}</echo>
+		<mkdir dir="${build.dir}" />
+		<echo>Done.</echo>
+
+		<echo>Building jar...</echo>
+		<jar destfile="${build.dir}/${jarfilename}">
+			<fileset dir="${bin.dir}" />
+		</jar>
+		<echo>Done.</echo>
+		
+	</target>
+</project>

@@ -7,10 +7,10 @@
 			CREATE SCHEMA adrsearch AUTHORIZATION SA
 			CREATE TABLE adrsearch.addressaccess
 			(
-			  addressaccessid varchar(255) NOT NULL,
-			  streetname varchar(255) NOT NULL,
-			  streetbuildingidentifier varchar(5) NOT NULL,
-			  postcodeidentifier varchar(10) NOT NULL,
+			  addressaccessid VARCHAR(255) NOT NULL,
+			  streetname VARCHAR_IGNORECASE(255) NOT NULL,
+			  streetbuildingidentifier VARCHAR_IGNORECASE(5) NOT NULL,
+			  postcodeidentifier VARCHAR_IGNORECASE(10) NOT NULL,
 			  districtname varchar(50) NOT NULL,
 			  presentationstring varchar(325) NOT NULL,
 			  geometrywkt varchar(50) NOT NULL,
@@ -20,8 +20,8 @@
 			CREATE TABLE adrsearch.streetname
 			(
 			  id varchar(255) NOT NULL,
-			  streetname varchar(255),
-			  postcodeidentifiervarchar(10) NOT NULL,
+			  streetname VARCHAR_IGNORECASE(255),
+			  postcodeidentifier VARCHAR_IGNORECASE(10) NOT NULL,
 			  districtname varchar(50) NOT NULL,
 			  presentationstring varchar(325) NOT NULL,
 			  CONSTRAINT streetname_pkey PRIMARY KEY (id)

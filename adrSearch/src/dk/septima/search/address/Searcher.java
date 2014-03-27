@@ -12,7 +12,7 @@ public class Searcher {
 	
 	public static List<SearchResult> search(String input, Connection connection, int maxResults) throws Exception{
 		
-		ParseResult parseResult = Parser.parse(input);
+		ParseResult parseResult = Parser.parse(input.toLowerCase());
 		String select = "";
 		String streetSelect = "select * from adrsearch.streetname";
 		String adrSelect = "select * from adrsearch.addressaccess";
@@ -21,12 +21,12 @@ public class Searcher {
 		String addressOrderClause = " order by streetName, postcodeidentifier, sortorder";
 		String limitClause = " limit " + Integer.toString(maxResults) + " ";
 		if (parseResult.hasStreetName()){
-			clause += " where streetname ilike '" + parseResult.streetName + "%' "; 
+			clause += " where streetname like '" + parseResult.streetName + "%' "; 
 			if (parseResult.hasPostCode()){
 				clause += " and postcodeidentifier = '" + parseResult.postCode + "' "; 
 			}
 			if (parseResult.hasStreetbuildingidentifier()){
-				clause += " and streetbuildingidentifier ilike '" + parseResult.streetbuildingidentifier + "%' "; 
+				clause += " and streetbuildingidentifier like '" + parseResult.streetbuildingidentifier + "%' "; 
 				select = adrSelect + clause + addressOrderClause + limitClause;
 				return createAddressSearchResults(connection, select);
 			}else{
@@ -44,7 +44,7 @@ public class Searcher {
 			if (parseResult.hasPostCode()){
 				clause += " where postcodeidentifier = '" + parseResult.postCode + "' "; 
 				if (parseResult.hasStreetbuildingidentifier()){
-					clause += " and streetbuildingidentifier ilike '" + parseResult.streetbuildingidentifier + "%' "; 
+					clause += " and streetbuildingidentifier like '" + parseResult.streetbuildingidentifier + "%' "; 
 					select = adrSelect + clause + addressOrderClause + limitClause;
 					return createAddressSearchResults(connection, select);
 				}else{
@@ -59,7 +59,7 @@ public class Searcher {
 				}
 			}else{
 				if (parseResult.hasStreetbuildingidentifier()){
-					clause += " and streetbuildingidentifier ilike '" + parseResult.streetbuildingidentifier + "%' "; 
+					clause += " and streetbuildingidentifier like '" + parseResult.streetbuildingidentifier + "%' "; 
 					select = adrSelect + clause + addressOrderClause + limitClause;
 					return createAddressSearchResults(connection, select);
 				}else{
@@ -123,6 +123,8 @@ public class Searcher {
 		test("Ainas väg", connection, limit);
 		test("Amdal 123 (444 94 Ucklum)", connection, limit);
 		test("Ainas väg 123", connection, limit);
+		test("AGNES VÄG", connection, limit);
+		test("Agnes väg", connection, limit);
 	}
 	
 	public static void test(String input, Connection connection, int maxResults) throws Exception{

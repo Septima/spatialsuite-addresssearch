@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <config>
-	<!-- The endpoint of the database in which the index is saved (Must be a db datasource) -->
-	<endpoint>adrSearchIndex</endpoint>
-	
 	<!-- Datasource and command from which to read addresses -->
+	<!-- 	Edit to suit your installation -->
 	<!-- 	The command MUST return these columns which MUST be not null -->
 	<!-- 	  addressaccessid varchar(255) Unique id of address -->
 	<!-- 	  streetname varchar(255) -->
@@ -45,4 +43,9 @@
 	<!-- 			  order	by nr_num, nr_litt -->
 	<!-- 		</sql> -->
 	<!-- 	</datasource> -->
+
+	<!-- The endpoint of the database in which the index is saved (Must be a db datasource) -->
+	<!-- Do not edit -->
+	<endpoint>adrSearchIndex</endpoint>
+	
 </config>
