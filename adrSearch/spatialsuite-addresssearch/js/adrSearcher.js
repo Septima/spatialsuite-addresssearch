@@ -12,9 +12,15 @@ AdrSearcher = Septima.Class (Septima.Search.Searcher,{
 	
 	fetchData: function (query, caller){
 		var data = {
-			query: query.queryString,
 			limit: query.limit + 1
 		};
+		
+		if (query.queryString == ""){
+			data.query = "a";
+		}else{
+			data.query = query.queryString;
+		}
+		
 	    var xhr = jQuery.ajax({
 	        url: "/jsp/modules/adrsearch/query.jsp",
 	        data: data,

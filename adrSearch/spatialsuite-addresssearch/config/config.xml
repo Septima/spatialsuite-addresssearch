@@ -12,7 +12,7 @@
 	<!-- 	  geometrywkt varchar(50) Point in wkt format -->
 	<!-- 	The command MUST sort the streetbuildingidentifier in a natural order -->
 	<!-- 	The command name MUST start with "read" -->
-	<datasource name="ds_adr" command="read_adresser"/>
+	<datasource name="ds_adrsearch" command="read_adresser"/>
 	<!-- 	Example: -->
 	<!-- 	Stenungsund kommun keeps addresses in the following table: -->
 	<!-- 	  CREATE TABLE adr -->

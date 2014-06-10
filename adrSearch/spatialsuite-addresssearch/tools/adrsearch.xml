@@ -12,7 +12,7 @@
 	    	var matchPhrase ="matchar"; //  cbInfo.getString('s4.list.matchphrase');
 			var _s4Searchers = _s4Searchers || [];
 			var options = {onSelect: s4Hit, matchesPhrase: matchPhrase};
-           	_s4Searchers.push({"title": "Adresser", "searcher" : new AdrSearcher(options)});
+           	_s4Searchers.push({"title": "Adresser", "searcher" : new AdrSearcher(options), info: true, print:true});
 		[endif]
     ]]>
     </jssrc>
