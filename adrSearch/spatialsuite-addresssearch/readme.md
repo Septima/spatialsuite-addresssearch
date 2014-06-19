@@ -1,9 +1,9 @@
-Local address search
+# Local address search
 
-Prerequisit:
+Prerequisites:
 S4 must be installed
 
-# Installation
+## Installation
 
 ### Unzip and copy the module to [cbinfo.config.dir]/modules/thirdparty/septima/adrsearch
 
@@ -14,14 +14,14 @@ S4 must be installed
 
 ### Copy .jar file  
 * Copy the included custom-dk.septima.spatialsuite.adrsearch-XX.jar file from lib to your WEB-INF/lib
-* Remove old .jar file if theres is one
+* Remove old .jar file if there is one
 
 ### Include tool in profile(s):
 ```xml
 <tool module="adrsearch" name="adrsearch"/>
 ```  
   
-# Configuration
+## Configuration
 
 ### In cbinfo.xml create a param pointing to the configuration folder  
 ```xml
@@ -52,19 +52,3 @@ Call [YOURSITE]/jsp/modules/adrsearch/build.jsp
 
 ### Test  
 Open the profile in Spatial Map and test the searcher
-
-External database (Only necessary in spatial map prior to 2.6)
-
-1: Create a adrsearch schema in your postgis database using the script in /db/create-schema.sql  
-2: Update cbinfo.xml. Assuming that your database is located at localhost include the following parameters in cbinfo.xml:  
-```xml	
-<!-- =================================== -->
-<!-- adrSearch parameters                 -->
-<!-- =================================== -->
-<param name="module.adrSearch.index.externdb.type">postgis</param>
-<param name="module.adrSearch.index.externdb.connect">localhost:5432/DBNAME</param>
-<param name="module.adrSearch.index.externdb.user">USERNAME</param>
-<param name="module.adrSearch.index.externdb.pwd">PASSWORD</param>
-<param name="module.adrSearch.index.externdb.srid">[cbinfo.mapserver.epsg]</param>
-```  
-3: Restart your site  

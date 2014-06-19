@@ -80,11 +80,19 @@ AdrSearcher = Septima.Class (Septima.Search.Searcher,{
 	        }
 	    }
         if (hitType == 'streetNameType' && data.numHits > limit && !query.hasTarget){
-        	var result = queryResult.addNewQuery("Fler Adresser", "Fler vägar " + this.getMatchesPhrase() +" <em>" + query.queryString + "</em>", query.queryString, null, null);
+			var description = null;
+			if (query.queryString.length > 0){
+				description = "Fler vägar " + this.getMatchesPhrase() +" <em>" + query.queryString + "</em>";
+			}
+        	var result = queryResult.addNewQuery("Fler Adresser", description, query.queryString, null, null);
         	result.image = this.folderIconURI;
         }
         if (hitType == 'addressAccessType' && data.numHits > limit && !query.hasTarget){
-        	var result = queryResult.addNewQuery("Fler Adresser", "Fler adresser " + this.getMatchesPhrase() +" <em>" + query.queryString + "</em>", query.queryString, null, null);
+			var description = null;
+			if (query.queryString.length > 0){
+				description = "Fler adresser " + this.getMatchesPhrase() +" <em>" + query.queryString + "</em>";
+			}
+        	var result = queryResult.addNewQuery("Fler Adresser", description, query.queryString, null, null);
         	result.image = this.folderIconURI;
         }
 
