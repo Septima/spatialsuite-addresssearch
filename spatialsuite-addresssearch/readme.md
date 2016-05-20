@@ -52,3 +52,13 @@ Call [YOURSITE]/jsp/modules/adrsearch/build.jsp
 
 ### Test  
 Open the profile in Spatial Map and test the searcher
+
+### Ekstern db
+Create schema using sql file
+Create params
+    <param name="adrsearchadrSearch.index.externdb.type">postgis</param>
+    <param name="adrsearchadrSearch.index.externdb.connect">localhost:5432/data</param>
+    <param name="adrsearchadrSearch.index.externdb.user">postgres</param>
+    <param name="adrsearchadrSearch.index.externdb.pwd">postgres</param>
+    <param name="adrsearchadrSearch.index.externdb.srid">25832</param>
+
