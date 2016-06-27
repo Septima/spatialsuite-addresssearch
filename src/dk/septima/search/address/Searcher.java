@@ -3,7 +3,6 @@ package dk.septima.search.address;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +20,7 @@ public class Searcher {
 		String addressOrderClause = " order by streetName, postcodeidentifier, sortorder";
 		String limitClause = " limit " + Integer.toString(maxResults) + " ";
 		if (parseResult.hasStreetName()){
-			clause += " where streetname like '" + parseResult.streetName + "%' "; 
+			clause += " where LOWER(streetname) like '" + parseResult.streetName + "%' "; 
 			if (parseResult.hasPostCode()){
 				clause += " and postcodeidentifier = '" + parseResult.postCode + "' "; 
 			}
