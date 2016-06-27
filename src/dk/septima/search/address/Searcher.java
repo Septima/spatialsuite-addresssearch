@@ -80,7 +80,8 @@ public class Searcher {
 			AddressAccessType.postCodeIdentifier = rs.getString("postcodeidentifier");
 			AddressAccessType.districtName  = rs.getString("districtname");
 			AddressAccessType.presentationString  = rs.getString("presentationstring");
-			AddressAccessType.geometryWkt  = rs.getString("geometrywkt");
+			AddressAccessType.geometryWkt = rs.getString("geometrywkt");
+			AddressAccessType.json = rs.getString("json");
 			list.add(AddressAccessType);
 		}
 		rs.close();
@@ -120,11 +121,11 @@ public class Searcher {
 		test("A", connection, limit);
 		test("A 444 94", connection, limit);
 		test("Amdal 444 94 Ucklum", connection, limit);
-		test("Ainas väg", connection, limit);
+		test("Ainas vï¿½g", connection, limit);
 		test("Amdal 123 (444 94 Ucklum)", connection, limit);
-		test("Ainas väg 123", connection, limit);
-		test("AGNES VÄG", connection, limit);
-		test("Agnes väg", connection, limit);
+		test("Ainas vï¿½g 123", connection, limit);
+		test("AGNES Vï¿½G", connection, limit);
+		test("Agnes vï¿½g", connection, limit);
 	}
 	
 	public static void test(String input, Connection connection, int maxResults) throws Exception{

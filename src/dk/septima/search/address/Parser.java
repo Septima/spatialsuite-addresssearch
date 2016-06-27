@@ -10,7 +10,7 @@ public class Parser {
 		String adrWork = input;
 		
 		//Replace strange whitespaces with spaces
-		adrWork = adrWork.replace(';', ' ').replace('`', ' ').replace('´', ' ');
+		adrWork = adrWork.replace(';', ' ').replace('`', ' ').replace('Â´', ' ');
 		
 		//5 numbers in a row OR 3 numbers + " " + 2 numbers is for sure a postaldistrict - remove them and put them into postaldistrict.
 		//postcode = adrWork.matches(regex)   substring(adr_work from '[ ,]([1-9][0-9]{3,3})[, ]{0,1}');
@@ -33,13 +33,12 @@ public class Parser {
 		if (adrWork.length() == 1){
 			parseResult.streetName = adrWork;
 		}else{
-			//ÉÜÄÖÈ
-			String pat_streetname = "([A-Za-z0-9ÆØÅæøåÉÜÄÖÈéüäöèÿ\\.\\-\\ ''\\/\\(\\)]+[A-Za-zÆØÅæøåÉÜÄÖÈéüäöèÜÿ]+)";
-			//String pat_streetname = "([A-Za-z0-9ÆØÅæøåéüäöèÜÿ\\.\\-\\ ''\\/\\(\\)]+[A-Za-zÆØÅæøåéüäöèÜÿ]+)";
+			//ï¿½ï¿½ï¿½ï¿½ï¿½
+			String pat_streetname = "([A-Za-z0-9Ã†Ã˜Ã…Ã¦Ã¸Ã¥Ã‰ÃœÃ„Ã–ÃˆÃ©Ã¼Ã¤Ã¶Ã¨Ã¿\\.\\-\\ ''\\/\\(\\)]+[A-Za-zÃ†Ã˜Ã…Ã¦Ã¸Ã¥Ã‰ÃœÃ„Ã–ÃˆÃ©Ã¼Ã¤Ã¶Ã¨ÃœÃ¿]+)";
 			Pattern[] patterns = new Pattern[4];;
 			patterns[0] = Pattern.compile(pat_streetname + "[,\\ ]+([0-9]{1,3} *[A-Za-z]{0,1})[,]*$"); // Streetname (w/o ','), streetbuildingidentifier and nothing afterwards
-			patterns[1] = Pattern.compile(pat_streetname + "[,\\ ]+([0-9]{1,3} *[A-Za-z]{0,1}),{0,1} [A-Za-zÆØÅæøåÉÜÄÖÈéüäöèÜÿ\\,\\ ]*$"); //Ramsherred 13 Brændstrup, flyttet ned da den overmatcher etager mv.
-			patterns[2] = Pattern.compile(pat_streetname + "[,\\ ]+([0-9]{1,3} *[A-Za-z]{0,1})[,\\ ]+[A-Za-z0-9ÆØÅæøåÉÜÄÖÈéüäöèÜÿ\\.\\-\\ ''\\/\\(\\)]*"); //Skolegade 9 A, Øster Højst-
+			patterns[1] = Pattern.compile(pat_streetname + "[,\\ ]+([0-9]{1,3} *[A-Za-z]{0,1}),{0,1} [A-Za-zÃ˜Ã…Ã¦Ã¸Ã¥Ã‰ÃœÃ„Ã–ÃˆÃ©Ã¼Ã¤Ã¶Ã¨Ã¿\\,\\ ]*$"); //Ramsherred 13 Brï¿½ndstrup, flyttet ned da den overmatcher etager mv.
+			patterns[2] = Pattern.compile(pat_streetname + "[,\\ ]+([0-9]{1,3} *[A-Za-z]{0,1})[,\\ ]+[A-Za-z0-9Ã˜Ã…Ã¦Ã¸Ã¥Ã‰ÃœÃ„Ã–ÃˆÃ©Ã¼Ã¤Ã¶Ã¨Ã¿\\.\\-\\ ''\\/\\(\\)]*"); //Skolegade 9 A, ï¿½ster Hï¿½jst-
 			patterns[3] = Pattern.compile(pat_streetname + "[ ]*$");
 			for (int i=0;i<patterns.length;i++){
 				Matcher matcher = patterns[i].matcher(adrWork);
@@ -64,19 +63,19 @@ public class Parser {
 //		System.out.println(Parser.parse("Amdal 123 444 94").toString());
 //		System.out.println(Parser.parse("Amdal 123").toString());
 //		System.out.println(Parser.parse("Amdal").toString());
-//		System.out.println(Parser.parse("Annas väg 123 444 94 Ucklum").toString());
-//		System.out.println(Parser.parse("Annas väg 123 444 94").toString());
-//		System.out.println(Parser.parse("Annas väg 123").toString());
-		System.out.println(Parser.parse("Annas väg").toString());
+//		System.out.println(Parser.parse("Annas vï¿½g 123 444 94 Ucklum").toString());
+//		System.out.println(Parser.parse("Annas vï¿½g 123 444 94").toString());
+//		System.out.println(Parser.parse("Annas vï¿½g 123").toString());
+		System.out.println(Parser.parse("Annas vï¿½g").toString());
 //		System.out.println(Parser.parse("Amdal 123 (444 94 Ucklum)").toString());
 //		System.out.println(Parser.parse("Amdal 123 (444 94").toString());
 //		System.out.println(Parser.parse("Amdal 123 (").toString());
 //		System.out.println(Parser.parse("Amdal").toString());
-//		System.out.println(Parser.parse("Annas väg 123C 44494 Ucklum").toString());
-//		System.out.println(Parser.parse("Annas väg 123 444 94").toString());
-//		System.out.println(Parser.parse("Annas väg 123C").toString());
-		System.out.println(Parser.parse("AGNES VÄG").toString());
-		System.out.println(Parser.parse("Agnes väg").toString());
+//		System.out.println(Parser.parse("Annas vï¿½g 123C 44494 Ucklum").toString());
+//		System.out.println(Parser.parse("Annas vï¿½g 123 444 94").toString());
+//		System.out.println(Parser.parse("Annas vï¿½g 123C").toString());
+		System.out.println(Parser.parse("AGNES Vï¿½G").toString());
+		System.out.println(Parser.parse("Agnes vï¿½g").toString());
 	}
 
 }

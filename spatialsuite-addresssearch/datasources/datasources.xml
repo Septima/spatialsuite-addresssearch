@@ -35,6 +35,9 @@
 			CREATE INDEX streetname_streetname_postcodeidentifier_idx
 			  ON adrsearch.streetname(streetname, postcodeidentifier);			
 		</config>
+        <config version="2" requires="1">
+            ALTER TABLE adrsearch.addressaccess ADD json varchar(2000);
+        </config>
 	</endpoint>
       <!-- {{endif}} -->
 

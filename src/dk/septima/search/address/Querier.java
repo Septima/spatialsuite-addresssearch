@@ -19,6 +19,7 @@ import com.carlbro.jdaf.pcollection.RowMetadata;
 import com.carlbro.jdaf.xml.DocumentCache;
 import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 
 public class Querier {
 
@@ -64,6 +65,7 @@ public class Querier {
 			returnObject.add("districtName", result.districtName);
 			returnObject.add("presentationString", result.presentationString);
 			returnObject.add("geometryWkt", result.geometryWkt);
+			returnObject.add("properties", JsonValue.readFrom(result.json));
 		}else if (resultType.equalsIgnoreCase("streetNameType")){
 			StreetNameType result = (StreetNameType)searchResult;
 			returnObject.add("type", resultType);

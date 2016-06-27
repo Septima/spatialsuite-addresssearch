@@ -14,6 +14,7 @@ import com.carlbro.cbinfo.datasource.impl.database.DBEndpoint;
 import com.carlbro.cbinfo.datasource.impl.database.command.DBSqlCommand;
 import com.carlbro.cbinfo.datasource.impl.embedded.EmbeddedEndpoint;
 import com.carlbro.cbinfo.global.GlobalRessources;
+import com.carlbro.cbinfo.json.JSONBuilder2;
 import com.carlbro.cbinfo.util.XMLTools2;
 import com.carlbro.jdaf.pcollection.Row;
 import com.carlbro.jdaf.pcollection.RowList;
@@ -30,6 +31,7 @@ public class Indexer {
 		Node nEndpoint = XMLTools2.getNodeList(configDoc, "//endpoint").item(0);
 		Node nDatasource = XMLTools2.getNodeList(configDoc, "//datasource").item(0);
 		RowList readRowList = getRowList(nDatasource);
+		JSONBuilder2 jsonBuilder = new JSONBuilder2();
 		if (readRowList != null){
 			DBConnection dbConnection = getDbConnection(nEndpoint);
 			try{
@@ -46,6 +48,7 @@ public class Indexer {
 					String districtname = thisRow.column("districtname").toString();
 					String presentationstring = thisRow.column("presentationstring").toString();
 					String geometrywkt = thisRow.column("geometrywkt").toString();
+					String json = jsonBuilder.buildPCollection(thisRow);
 					insertAddressStatement.setString(1, addressaccessid);
 					insertAddressStatement.setString(2, streetname);
 					insertAddressStatement.setString(3, streetbuildingidentifier);
@@ -54,6 +57,7 @@ public class Indexer {
 					insertAddressStatement.setString(6, presentationstring);
 					insertAddressStatement.setString(7, geometrywkt);
 					insertAddressStatement.setInt (8 , sortOrder);
+					insertAddressStatement.setString(9, json);
 					sortOrder++;
 					insertAddressStatement.addBatch();
 				}
@@ -104,7 +108,7 @@ public class Indexer {
 
 	private static PreparedStatement getInsertAddressStatement(DBConnection dbConnection) throws Exception {
 		Connection connection = dbConnection.getPConnection().getConnection();
-		String insertAddressSql =  "insert into adrsearch.addressaccess (addressaccessid, streetname, streetbuildingidentifier, postcodeidentifier, districtname, presentationstring, geometrywkt, sortorder) values(?,?,?,?,?,?,?,?)";
+		String insertAddressSql =  "insert into adrsearch.addressaccess (addressaccessid, streetname, streetbuildingidentifier, postcodeidentifier, districtname, presentationstring, geometrywkt, sortorder, json) values(?,?,?,?,?,?,?,?,?)";
 		PreparedStatement insertAddressStatement = connection.prepareStatement(insertAddressSql);
 		return insertAddressStatement;
 	}

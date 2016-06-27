@@ -9,6 +9,7 @@ CREATE TABLE adrsearch.addressaccess
   presentationstring character varying,
   geometrywkt character varying,
   sortorder int,
+  json character varying,
   CONSTRAINT addressaccess_pkey PRIMARY KEY (addressaccessid)
 )
 WITH (
