@@ -3,7 +3,7 @@
     <requires>
 	    [if: ModuleDefined("s4") ]
 	    	<include src="[module:s4.dir]/tools/s4-requires.xml" nodes="/tool/requires/*" mustexist="true"/>
-			<file type="script" name="/modules/adrsearch/js/adrSearcher.js"/>
+			<file type="script" name="/modules/adrsearch/js/adrSearcher.js?_=[adrsearch.version]"/>
 		[endif]
    </requires>
     <src>

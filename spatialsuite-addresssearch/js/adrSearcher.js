@@ -16,7 +16,7 @@ AdrSearcher = Septima.Class (Septima.Search.Searcher,{
 		};
 		
 		if (query.queryString == ""){
-			data.query = "a";
+			data.query = "";
 		}else{
 			data.query = query.queryString;
 		}

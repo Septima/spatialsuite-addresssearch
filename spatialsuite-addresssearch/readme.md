@@ -31,6 +31,16 @@ S4 must be installed
 <param name="adrsearch.config.dir">[cbinfo.misc.dir]/custom/adrsearch</param>
 ```
 
+### To use postgis for indexing please add the following params
+```xml
+<param name="module.adrSearch.index.externdb.type">postgis</param>
+<param name="module.adrSearch.index.externdb.connect">HOST:5432/DB</param>
+<param name="module.adrSearch.index.externdb.user">USER</param>
+<param name="module.adrSearch.index.externdb.pwd">PASS</param>
+<param name="module.adrSearch.index.externdb.srid">25832</param>
+```
+
+
 ### Create configuration file  
 * Copy the example configuration file (config/config.xml) to [cbinfo.misc.dir]/custom/adrsearch/config.xml
 * The configuration file points to a datasource/command, ds_adrsearch/read_adresser, selecting your addresses (Please see the file for documentation)  
