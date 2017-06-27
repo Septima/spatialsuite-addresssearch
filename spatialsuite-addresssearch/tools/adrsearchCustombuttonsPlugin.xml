@@ -10,14 +10,17 @@
    </requires>
     <src><![CDATA[
     [if: ModuleDefined("s4") ]
-           
-        window["_s4CustomButtons"] = window["_s4CustomButtons"] || [];
-        var _s4CustomButtons = window["_s4CustomButtons"];
-        
-        var _adrsearchFastighetsIkon = Septima.Search.icons.linksymbol;
-        window["s4AdrSearcher"].addCustomButtonDef({"buttonText": "Eget urval fastighet", "buttonImage": _adrsearchFastighetsIkon, "callBack": adrsearchFastighetsKnapp});
+        if (window["s4AdrSearcher"]){
+	        
+	        window["_s4CustomButtons"] = window["_s4CustomButtons"] || [];
+	        var _s4CustomButtons = window["_s4CustomButtons"];
+	        
+	        var _adrsearchFastighetsIkon = Septima.Search.icons.linksymbol;
+	        window["s4AdrSearcher"].addCustomButtonDef({"buttonText": "Eget urval fastighet", "buttonImage": _adrsearchFastighetsIkon, "callBack": adrsearchFastighetsKnapp});
 
-        function adrsearchFastighetsKnapp (result){
+        }
+        
+        function adrsearchFastighetsKnapp(result){
             _s4View.blur();
              var url = "http://tekiswebb.stenungsund.se/FBWebb/TekisWebbRapport/TekisFirRapportUsr.aspx?DataBase=Stenungsund&amp;user=FBLASA&amp;pass=FBLASA&amp;fnr=" + result.data.properties.fnr; 
              window.open(url, "_adrsearchFastighetsKnapp");

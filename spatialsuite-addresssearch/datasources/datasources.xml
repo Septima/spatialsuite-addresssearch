@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <datasources>
- <!-- {{if: '[module.adrSearch.index.externdb.type]' != 'postgis' }} -->
+ <!-- {{if: '[module.adrSearch.index.externdb.type]' != 'postgis' AND '[module.adrSearch.index.externdb.type]' != 'mssql'}} -->
 	<endpoint name="adrSearchIndex" endpointtype="embedded">
 		<srs>[cbinfo.mapserver.epsg]</srs>
 		<config version="1" requires="1">
@@ -50,6 +50,16 @@
         <pwd>[module.adrSearch.index.externdb.pwd]</pwd>
         <srid>[module.adrSearch.index.externdb.srid]</srid>
 	    <sharedconnection>false</sharedconnection>
+    </endpoint>
+      <!-- {{endif}} -->
+
+ <!-- {{if: '[module.adrSearch.index.externdb.type]' = 'mssql' }} -->
+    <endpoint name="adrSearchIndex" endpointtype="[module.adrSearch.index.externdb.type]">
+        <connect>[module.adrSearch.index.externdb.connect]</connect>
+        <user>[module.adrSearch.index.externdb.user]</user>
+        <pwd>[module.adrSearch.index.externdb.pwd]</pwd>
+        <srid>[module.adrSearch.index.externdb.srid]</srid>
+        <sharedconnection>false</sharedconnection>
     </endpoint>
       <!-- {{endif}} -->
 </datasources>

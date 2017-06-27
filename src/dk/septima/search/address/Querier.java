@@ -11,6 +11,8 @@ import com.carlbro.cbinfo.datasource.impl.database.DBConnection;
 import com.carlbro.cbinfo.datasource.impl.database.DBContext;
 import com.carlbro.cbinfo.datasource.impl.database.DBEndpoint;
 import com.carlbro.cbinfo.datasource.impl.database.command.DBSqlCommand;
+import com.carlbro.cbinfo.datasource.impl.embedded.EmbeddedEndpoint;
+import com.carlbro.cbinfo.datasource.impl.postgis.PGEndpoint;
 import com.carlbro.cbinfo.global.GlobalRessources;
 import com.carlbro.cbinfo.util.XMLTools2;
 import com.carlbro.jdaf.pcollection.Row;
@@ -23,7 +25,9 @@ import com.eclipsesource.json.JsonValue;
 
 public class Querier {
 
-	public static String query(String input, int maxResults) throws Exception{
+	String endPointType = null;
+
+	public String query(String input, int maxResults) throws Exception{
 		try{
 			GlobalRessources.getInstance().reloadIfNeeded();
 			DocumentCache docCache = GlobalRessources.getInstance ().getDocumentCache ();
@@ -32,7 +36,7 @@ public class Querier {
 			Node nEndpoint = XMLTools2.getNodeList(configDoc, "//endpoint").item(0);
 			DBConnection dbConnection = getDbConnection(nEndpoint);
 			Connection connection = dbConnection.getPConnection().getConnection();
-			List<SearchResult> searchResult = Searcher.search(input, connection, maxResults);
+			List<SearchResult> searchResult = Searcher.search(input, connection, maxResults, this.endPointType);
 			
 			int searchResultCount = searchResult.size();
 			JsonObject returnObject = new JsonObject();
@@ -77,15 +81,21 @@ public class Querier {
 		return returnObject;
 	}
 
-	private static DBConnection getDbConnection(Node nEndpoint) throws Exception{
+	private DBConnection getDbConnection(Node nEndpoint) throws Exception{
 		String epName = XMLTools2.getNodeValue(nEndpoint);
 		DatasourceManager datasourceManager = GlobalRessources.getInstance().getDatasourceManager();
 		DBEndpoint dbEndpoint = (DBEndpoint)datasourceManager.getEndpoint(epName);
+		this.endPointType = dbEndpoint.getDbType();
 		DBConnection dbConnection = (DBConnection) dbEndpoint.createConnection();
         try{
-            executeStatement(dbConnection, "select * from adrsearch.addressaccess where 1=1", getDummyInput());
+	        if (this.endPointType == PGEndpoint.DBTYPE){
+	            executeStatement(dbConnection, "SET search_path TO adrsearch, public", getDummyInput());
+	        } else if (this.endPointType == EmbeddedEndpoint.DBTYPE){
+	            executeStatement(dbConnection, "SET INITIAL SCHEMA adrsearch", getDummyInput());
+	        } 
+            executeStatement(dbConnection, "select * from addressaccess where 1=1", getDummyInput());
 		}catch(Exception e){
-			throw new Exception("dk.septima.search.address.Indexer: dbEndPoint '" + epName + "' not defined or database not ready for index.", e);
+			throw new Exception("dk.septima.search.address.Querier: dbEndPoint '" + epName + "' not defined or database not ready for index.", e);
 		}
 		return dbConnection;
 	}
