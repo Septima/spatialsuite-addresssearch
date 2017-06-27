@@ -13,6 +13,8 @@ import com.carlbro.cbinfo.datasource.impl.database.DBContext;
 import com.carlbro.cbinfo.datasource.impl.database.DBEndpoint;
 import com.carlbro.cbinfo.datasource.impl.database.command.DBSqlCommand;
 import com.carlbro.cbinfo.datasource.impl.embedded.EmbeddedEndpoint;
+import com.carlbro.cbinfo.datasource.impl.mssql.MSSQLEndpoint;
+import com.carlbro.cbinfo.datasource.impl.postgis.PGEndpoint;
 import com.carlbro.cbinfo.global.GlobalRessources;
 import com.carlbro.cbinfo.json.JSONBuilder2;
 import com.carlbro.cbinfo.util.XMLTools2;
@@ -22,6 +24,8 @@ import com.carlbro.jdaf.pcollection.RowMetadata;
 import com.carlbro.jdaf.xml.DocumentCache;
 
 public class Indexer {
+	
+	String endPointType = null;
 	
 	public void build() throws Exception{
 		GlobalRessources.getInstance().reloadIfNeeded();
@@ -36,7 +40,7 @@ public class Indexer {
 			DBConnection dbConnection = getDbConnection(nEndpoint);
 			try{
 				dbConnection.beginTransaction();
-				executeStatement(dbConnection, "delete from adrsearch.addressaccess", getDummyInput());
+				executeStatement(dbConnection, "delete from addressaccess", getDummyInput());
 				PreparedStatement insertAddressStatement = getInsertAddressStatement(dbConnection);
 				int sortOrder = 0;
 				for (int i=0;i<readRowList.size();i++){
@@ -62,16 +66,27 @@ public class Indexer {
 					insertAddressStatement.addBatch();
 				}
 				insertAddressStatement.executeBatch();
-				executeStatement(dbConnection, "delete from adrsearch.streetname", getDummyInput());
+				executeStatement(dbConnection, "delete from streetname", getDummyInput());
 				String updateStreetnameSql;
-				updateStreetnameSql  = "insert into adrsearch.streetname ";
-				updateStreetnameSql += "select	max(addressaccessid) as id, ";
-				updateStreetnameSql += "		streetname as streetname, ";
-				updateStreetnameSql += "		postcodeidentifier as postcodeidentifier, ";
-				updateStreetnameSql += "		districtname as districtname, ";
-				updateStreetnameSql += "		streetname || ' (' || postcodeidentifier || ' ' ||districtname || ')' as presentationstring ";
-				updateStreetnameSql += "	from	adrsearch.addressaccess ";
-				updateStreetnameSql += "	group	by streetname, postcodeidentifier, districtname, streetname || ' (' || postcodeidentifier || ' ' ||districtname || ')' ";
+		        if (this.endPointType == MSSQLEndpoint.DBTYPE){
+					updateStreetnameSql  = "insert into streetname ";
+					updateStreetnameSql += "select	max(addressaccessid) as id, ";
+					updateStreetnameSql += "		streetname as streetname, ";
+					updateStreetnameSql += "		postcodeidentifier as postcodeidentifier, ";
+					updateStreetnameSql += "		districtname as districtname, ";
+					updateStreetnameSql += "		streetname + ' (' + postcodeidentifier + ' ' +districtname + ')' as presentationstring ";
+					updateStreetnameSql += "	from	addressaccess ";
+					updateStreetnameSql += "	group	by streetname, postcodeidentifier, districtname, streetname + ' (' + postcodeidentifier + ' ' +districtname + ')' ";
+		        }else{
+					updateStreetnameSql  = "insert into streetname ";
+					updateStreetnameSql += "select	max(addressaccessid) as id, ";
+					updateStreetnameSql += "		streetname as streetname, ";
+					updateStreetnameSql += "		postcodeidentifier as postcodeidentifier, ";
+					updateStreetnameSql += "		districtname as districtname, ";
+					updateStreetnameSql += "		streetname || ' (' || postcodeidentifier || ' ' ||districtname || ')' as presentationstring ";
+					updateStreetnameSql += "	from	addressaccess ";
+					updateStreetnameSql += "	group	by streetname, postcodeidentifier, districtname, streetname || ' (' || postcodeidentifier || ' ' ||districtname || ')' ";
+		        }
 				executeStatement(dbConnection, updateStreetnameSql, getDummyInput());
 				dbConnection.commitTransaction();
 			}catch(Exception e){
@@ -93,13 +108,19 @@ public class Indexer {
 		return GlobalRessources.getInstance().getCBInfoParam().toRowList().row(0);
 	}
 
-	private static DBConnection getDbConnection(Node nEndpoint) throws Exception{
+	private DBConnection getDbConnection(Node nEndpoint) throws Exception{
 		String epName = XMLTools2.getNodeValue(nEndpoint);
 		DatasourceManager datasourceManager = GlobalRessources.getInstance().getDatasourceManager();
 		DBEndpoint dbEndpoint = (DBEndpoint)datasourceManager.getEndpoint(epName);
+		this.endPointType = dbEndpoint.getDbType();
 		DBConnection dbConnection = (DBConnection) dbEndpoint.createConnection();
         try{
-            executeStatement(dbConnection, "select * from adrsearch.addressaccess where 1=1", getDummyInput());
+	        if (this.endPointType == PGEndpoint.DBTYPE){
+	            executeStatement(dbConnection, "SET search_path TO adrsearch, public", getDummyInput());
+	        } else if (this.endPointType == EmbeddedEndpoint.DBTYPE){
+	            executeStatement(dbConnection, "SET INITIAL SCHEMA adrsearch", getDummyInput());
+	        } 
+            executeStatement(dbConnection, "select * from addressaccess where 1=1", getDummyInput());
 		}catch(Exception e){
 			throw new Exception("dk.septima.search.address.Indexer: dbEndPoint '" + epName + "' not defined or database not ready for index.", e);
 		}
@@ -108,7 +129,7 @@ public class Indexer {
 
 	private static PreparedStatement getInsertAddressStatement(DBConnection dbConnection) throws Exception {
 		Connection connection = dbConnection.getPConnection().getConnection();
-		String insertAddressSql =  "insert into adrsearch.addressaccess (addressaccessid, streetname, streetbuildingidentifier, postcodeidentifier, districtname, presentationstring, geometrywkt, sortorder, json) values(?,?,?,?,?,?,?,?,?)";
+		String insertAddressSql =  "insert into addressaccess (addressaccessid, streetname, streetbuildingidentifier, postcodeidentifier, districtname, presentationstring, geometrywkt, sortorder, json) values(?,?,?,?,?,?,?,?,?)";
 		PreparedStatement insertAddressStatement = connection.prepareStatement(insertAddressSql);
 		return insertAddressStatement;
 	}

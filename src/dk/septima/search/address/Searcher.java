@@ -1,24 +1,33 @@
 package dk.septima.search.address;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.carlbro.cbinfo.datasource.impl.postgis.PGEndpoint;
+
 public class Searcher {
 	
-	public static List<SearchResult> search(String input, Connection connection, int maxResults) throws Exception{
+	public static List<SearchResult> search(String input, Connection connection, int maxResults, String endPointType) throws Exception{
 		
 		ParseResult parseResult = Parser.parse(input.toLowerCase());
+		String pgLimitClause = "";
+		String msSqlTopClause = "";
+		if (endPointType == PGEndpoint.DBTYPE){
+			pgLimitClause = " limit " + Integer.toString(maxResults) + " ";
+		}else{
+			msSqlTopClause = " top " + Integer.toString(maxResults) + " ";
+		}
+
 		String select = "";
-		String streetSelect = "select * from adrsearch.streetname";
-		String adrSelect = "select * from adrsearch.addressaccess";
+		String streetSelect = "select " + msSqlTopClause + " * from streetname";
+		String adrSelect = "select " + msSqlTopClause + " * from addressaccess";
 		String clause = "  ";
 		String streetOrderClause = " order by streetName, postcodeidentifier";
 		String addressOrderClause = " order by streetName, postcodeidentifier, sortorder";
-		String limitClause = " limit " + Integer.toString(maxResults) + " ";
+		
 		if (parseResult.hasStreetName()){
 			clause += " where LOWER(streetname) like '" + parseResult.streetName + "%' "; 
 			if (parseResult.hasPostCode()){
@@ -26,15 +35,15 @@ public class Searcher {
 			}
 			if (parseResult.hasStreetbuildingidentifier()){
 				clause += " and streetbuildingidentifier like '" + parseResult.streetbuildingidentifier + "%' "; 
-				select = adrSelect + clause + addressOrderClause + limitClause;
+				select = adrSelect + clause + addressOrderClause + pgLimitClause;
 				return createAddressSearchResults(connection, select);
 			}else{
-				select = streetSelect + clause + streetOrderClause + limitClause;
+				select = streetSelect + clause + streetOrderClause + pgLimitClause;
 				List<SearchResult> searchResults = createStreetSearchResults(connection, select);
 				if (searchResults.size() > 1){
 					return searchResults;
 				}else{
-					select = adrSelect + clause + addressOrderClause + limitClause;
+					select = adrSelect + clause + addressOrderClause + pgLimitClause;
 					return createAddressSearchResults(connection, select);
 				}
 			}
@@ -44,22 +53,22 @@ public class Searcher {
 				clause += " where postcodeidentifier = '" + parseResult.postCode + "' "; 
 				if (parseResult.hasStreetbuildingidentifier()){
 					clause += " and streetbuildingidentifier like '" + parseResult.streetbuildingidentifier + "%' "; 
-					select = adrSelect + clause + addressOrderClause + limitClause;
+					select = adrSelect + clause + addressOrderClause + pgLimitClause;
 					return createAddressSearchResults(connection, select);
 				}else{
-					select = streetSelect + clause + streetOrderClause + limitClause;
+					select = streetSelect + clause + streetOrderClause + pgLimitClause;
 					List<SearchResult> searchResults = createStreetSearchResults(connection, select);
 					if (searchResults.size() > 1){
 						return searchResults;
 					}else{
-						select = adrSelect += clause + addressOrderClause + limitClause;
+						select = adrSelect += clause + addressOrderClause + pgLimitClause;
 						return createAddressSearchResults(connection, select);
 					}
 				}
 			}else{
 				if (parseResult.hasStreetbuildingidentifier()){
 					clause += " and streetbuildingidentifier like '" + parseResult.streetbuildingidentifier + "%' "; 
-					select = adrSelect + clause + addressOrderClause + limitClause;
+					select = adrSelect + clause + addressOrderClause + pgLimitClause;
 					return createAddressSearchResults(connection, select);
 				}else{
 					return new ArrayList<SearchResult>();
@@ -102,36 +111,6 @@ public class Searcher {
 		return list;
 	}
 
-	/**
-	 * @param args
-	 * @throws Exception 
-	 */
-	public static void main(String[] args) throws Exception {
-		Connection connection = getConnection();
-		int limit = 20;
-		test("444 94 Ucklum", connection, limit);
-		test("Amdal 123 444 94 Ucklum", connection, limit);
-		test("Amdal 123 444 94", connection, limit);
-		test("Amdal 123", connection, limit);
-		test("Am 123", connection, limit);
-		test("Am 1", connection, limit);
-		test("Am 2", connection, limit);
-		test("Am", connection, limit);
-		test("A", connection, limit);
-		test("A 444 94", connection, limit);
-		test("Amdal 444 94 Ucklum", connection, limit);
-		test("Ainas v�g", connection, limit);
-		test("Amdal 123 (444 94 Ucklum)", connection, limit);
-		test("Ainas v�g 123", connection, limit);
-		test("AGNES V�G", connection, limit);
-		test("Agnes v�g", connection, limit);
-	}
-	
-	public static void test(String input, Connection connection, int maxResults) throws Exception{
-		System.out.println(input + ": ");
-		System.out.println(writeSearchResults(Searcher.search(input, connection, maxResults)));
-	}
-	
 	public static String writeSearchResults(List<SearchResult> searchResults){
 		StringBuffer out = new StringBuffer();
 		for(SearchResult searchResult : searchResults) {
@@ -140,19 +119,4 @@ public class Searcher {
 		return out.toString();
 	}
 	
-	private static Connection getConnection() throws Exception{
-		   // JDBC driver name and database URL
-		   String JDBC_DRIVER = "org.postgresql.Driver";  
-		   String DB_URL = "jdbc:postgresql://localhost/adrsearch";
-
-		   //  Database credentials
-		   String USER = "postgres";
-		   String PASS = "postgres";
-		   
-		   Connection connection = DriverManager.getConnection(DB_URL,USER,PASS);
-		 
-		return connection;
-		
-	}
-
 }

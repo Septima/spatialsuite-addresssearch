@@ -4,10 +4,11 @@ AdrSearcher = Septima.Class (Septima.Search.Searcher,{
 		if (options == undefined){
 			throw "New Septima.Search.AdrSearcher(options): Options missing.";
 		}
-		
 		options.usesGeoFunctions = true;
-
+		options.source = "Adresser"; 
 		this.Searcher(options);
+		this.type = "Adress";
+        this.registerType(this.type);
 	},
 	
 	fetchData: function (query, caller){
@@ -75,28 +76,22 @@ AdrSearcher = Septima.Class (Septima.Search.Searcher,{
 	        var thisHit = data.data[i];
 	        if (hitType == 'streetNameType'){
 	        	var newQueryString = thisHit.streetName + " <select> </select> "  + thisHit.postCodeIdentifier + ' ' + thisHit.districtName;
-	        	newQuery = queryResult.addNewQuery(thisHit.presentationString, null, newQueryString, null, thisHit);
+	        	newQuery = queryResult.addNewQuery(this.source, this.type, thisHit.presentationString, null, newQueryString, null, thisHit);
 	        	newQuery.image = Septima.Search.icons.road;
 	        }else{
 	            var resultGeometry = this.translateWktToGeoJsonObject(thisHit.geometryWkt);
-	            result = queryResult.addResult(thisHit.presentationString, null, resultGeometry, thisHit);
+	            result = queryResult.addResult(this.source, this.type, thisHit.presentationString, null, resultGeometry, thisHit);
 	            result.image = Septima.Search.icons.mapPointGrey;
 	        }
 	    }
         if (hitType == 'streetNameType' && data.numHits > limit && !query.hasTarget){
 			var description = null;
-//			if (query.queryString.length > 0){
-//				description = "Fler vägar " + this.getMatchesPhrase() +" <em>" + query.queryString + "</em>";
-//			}
-        	newQuery = queryResult.addNewQuery("Fler Adresser", description, query.queryString, null, null);
+        	newQuery = queryResult.addNewQuery(this.source, this.type, "Fler Adresser", description, query.queryString, null, null);
         	newQuery.image = Septima.Search.icons.road;
         }
         if (hitType == 'addressAccessType' && data.numHits > limit && !query.hasTarget){
 			var description = null;
-			if (query.queryString.length > 0){
-				description = "Fler adresser " + this.getMatchesPhrase() +" <em>" + query.queryString + "</em>";
-			}
-        	result = queryResult.addNewQuery("Fler Adresser", description, query.queryString, null, null);
+        	result = queryResult.addNewQuery(this.source, this.type, "Fler Adresser", description, query.queryString, null, null);
             result.image = Septima.Search.icons.mapPointGrey;
         }
 

@@ -15,7 +15,8 @@
  	if (limit != null){
  		limitToUse = Integer.parseInt(limit);
  	}
- 	String jsonResult = Querier.query(query, limitToUse); 
+ 	Querier querier = new Querier();
+ 	String jsonResult = querier.query(query, limitToUse); 
  	String callback = request.getParameter("callback");
  	if (callback != null){
  	 	response.setContentType("application/javascript; charset=UTF-8");
