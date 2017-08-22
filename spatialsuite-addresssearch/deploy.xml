@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <deploy>
-   <version>0.5</version>
-   <param name="adrsearch.version">0.5</param>
+   <version>0.7</version>
+   <param name="adrsearch.version">0.7</param>
    <stoponerror>true</stoponerror>
   
    <makedir dir="[cbinfo.wwwroot.dir]/jsp/modules/adrsearch"/>

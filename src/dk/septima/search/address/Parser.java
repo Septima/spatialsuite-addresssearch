@@ -42,7 +42,7 @@ public class Parser {
 			patterns[3] = Pattern.compile(pat_streetname + "[ ]*$");
 			for (int i=0;i<patterns.length;i++){
 				Matcher matcher = patterns[i].matcher(adrWork);
-				if (matcher.find()){
+				if (matcher.find()){ 
 					if (parseResult.streetName == ""){
 						parseResult.streetName = matcher.group(1);
 						parseResult.streetbuildingidentifier = "";
