@@ -5,7 +5,8 @@ AdrSearcher = Septima.Class (Septima.Search.Searcher,{
 			throw "New Septima.Search.AdrSearcher(options): Options missing.";
 		}
 		options.usesGeoFunctions = true;
-		options.source = "Adresser"; 
+		this.source = "Adresser";
+		options.source = this.source; 
 		this.Searcher(options);
 		this.type = "Adress";
         this.registerType(this.type);
@@ -41,24 +42,17 @@ AdrSearcher = Septima.Class (Septima.Search.Searcher,{
 	        },this, caller)     
 	    });
 	    
-	    caller.registerOnCancelHandler ( Septima.bind(function (xhr) {
-	    	if (xhr && xhr.readystate != 4){
-	    		xhr.abort();
-	    	}
-	    },this,xhr));
 	},
 	
 	success: function(caller, data, textStatus, jqXHR){
-		if (caller.isActive()){
-			if (jqXHR.status == 200){
-				if (data.status == "OK"){
-					caller.fetchSuccess(this.getDataSearchResult(data));
-				}else{
-					caller.fetchError(this, data.message);
-				}
+		if (jqXHR.status == 200){
+			if (data.status == "OK"){
+				caller.fetchSuccess(this.getDataSearchResult(data));
 			}else{
-				caller.fetchError(this, jqXHR.statusText);
+				caller.fetchError(this, data.message);
 			}
+		}else{
+			caller.fetchError(this, jqXHR.statusText);
 		}
 	},
 	

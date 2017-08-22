@@ -35,11 +35,11 @@ public class Parser {
 		}else{
 			//�����
 			String pat_streetname = "([A-Za-z0-9ÆØÅæøåÉÜÄÖÈéüäöèÿ\\.\\-\\ ''\\/\\(\\)]+[A-Za-zÆØÅæøåÉÜÄÖÈéüäöèÜÿ]+)";
-			Pattern[] patterns = new Pattern[4];;
+			Pattern[] patterns = new Pattern[3];;
 			patterns[0] = Pattern.compile(pat_streetname + "[,\\ ]+([0-9]{1,3} *[A-Za-z]{0,1})[,]*$"); // Streetname (w/o ','), streetbuildingidentifier and nothing afterwards
 			patterns[1] = Pattern.compile(pat_streetname + "[,\\ ]+([0-9]{1,3} *[A-Za-z]{0,1}),{0,1} [A-Za-zØÅæøåÉÜÄÖÈéüäöèÿ\\,\\ ]*$"); //Ramsherred 13 Br�ndstrup, flyttet ned da den overmatcher etager mv.
 			patterns[2] = Pattern.compile(pat_streetname + "[,\\ ]+([0-9]{1,3} *[A-Za-z]{0,1})[,\\ ]+[A-Za-z0-9ØÅæøåÉÜÄÖÈéüäöèÿ\\.\\-\\ ''\\/\\(\\)]*"); //Skolegade 9 A, �ster H�jst-
-			patterns[3] = Pattern.compile(pat_streetname + "[ ]*$");
+			//patterns[3] = Pattern.compile(pat_streetname + "[ ]*$");
 			for (int i=0;i<patterns.length;i++){
 				Matcher matcher = patterns[i].matcher(adrWork);
 				if (matcher.find()){

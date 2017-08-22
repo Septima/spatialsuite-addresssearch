@@ -34,7 +34,7 @@ public class Searcher {
 				clause += " and postcodeidentifier = '" + parseResult.postCode + "' "; 
 			}
 			if (parseResult.hasStreetbuildingidentifier()){
-				clause += " and streetbuildingidentifier like '" + parseResult.streetbuildingidentifier + "%' "; 
+				clause += " and LOWER(streetbuildingidentifier) like '" + parseResult.streetbuildingidentifier + "%' "; 
 				select = adrSelect + clause + addressOrderClause + pgLimitClause;
 				return createAddressSearchResults(connection, select);
 			}else{
