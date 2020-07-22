@@ -4,12 +4,10 @@ AdrSearcher = Septima.Class (Septima.Search.Searcher,{
 		if (options == undefined){
 			throw "New Septima.Search.AdrSearcher(options): Options missing.";
 		}
-		options.usesGeoFunctions = true;
 		this.source = "Adresser";
-		options.source = this.source; 
-		this.Searcher(options);
+        Septima.Search.Searcher.prototype.constructor.apply(this, [options]);
 		this.type = "Adress";
-        this.registerType(this.type);
+        this.registerType(this.type, this.type);
 	},
 	
 	fetchData: function (query, caller){
