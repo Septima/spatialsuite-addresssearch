@@ -7,8 +7,13 @@
  <%
  	//query.jsp?query=ad 2 234 75&limit=10&callback=fuc
  	String query = request.getParameter("query");
- 
- 	query = new String(query.getBytes("ISO8859_1"), "UTF-8");
+
+    String utf8behaviour = GlobalRessources.getInstance().getCBInfoParam().getLocalStringValue("module.s4.index.utf8behaviour");
+    if (utf8behaviour != null && utf8behaviour.equalsIgnoreCase("noconvert")){
+    	query = query;
+    }else{
+        query = new String(query.getBytes("ISO8859_1"), "UTF-8");
+    }
 
  	String limit = request.getParameter("limit");
  	int limitToUse = 10;
