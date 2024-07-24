@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="adrSearch" default="build" basedir=".">
-	<property name="version" value="0.10.b1" />
+	<property name="version" value="0.96" />
 	<property name="src.dir" location="${basedir}/src" />
 	<property name="bin.dir" location="${basedir}/bin" />
 	<property name="build.dir" location="${basedir}/build/${version}" />

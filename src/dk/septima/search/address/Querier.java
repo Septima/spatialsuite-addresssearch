@@ -26,6 +26,36 @@ import com.eclipsesource.json.JsonValue;
 public class Querier {
 
 	String endPointType = null;
+	
+	public String get(String id) throws Exception{
+		try{
+			GlobalRessources.getInstance().reloadIfNeeded();
+			DocumentCache docCache = GlobalRessources.getInstance ().getDocumentCache ();
+			String configDir = GlobalRessources.getInstance().getCBInfoParam().getLocalStringValue("adrSearch.config.dir");
+			Document configDoc = docCache.getDocument(configDir + "/config.xml");
+			Node nEndpoint = XMLTools2.getNodeList(configDoc, "//endpoint").item(0);
+			DBConnection dbConnection = getDbConnection(nEndpoint);
+			Connection connection = dbConnection.getPConnection().getConnection();
+			List<SearchResult> searchResults = Searcher.get(id, connection, this.endPointType);
+			
+			int searchResultCount = searchResults.size();
+			JsonObject returnObject = new JsonObject();
+			returnObject.add("numHits", searchResultCount);
+			returnObject.add("status", "OK");
+			returnObject.add("message", "OK");
+			JsonArray data = new JsonArray();
+			for (int i=0;i<searchResultCount;i++){
+				data.add(createObject(searchResults.get(i)));
+			}
+			returnObject.add("data", data);
+			return returnObject.toString();
+		}catch(Exception e){
+			JsonObject returnObject = new JsonObject();
+			returnObject.add("status", "ERROR");
+			returnObject.add("message", e.getMessage());
+			return returnObject.toString();
+		}
+	}
 
 	public String query(String input, int maxResults) throws Exception{
 		try{

@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <deploy>
-   <version>0.95</version>
-   <param name="adrsearch.version">0.95</param>
+   <version>0.96</version>
+   <param name="adrsearch.version">0.96</param>
    <stoponerror>true</stoponerror>
   
    <makedir dir="[cbinfo.wwwroot.dir]/jsp/modules/adrsearch"/>
    <copyfile fromfile="[module:adrsearch.dir]/jsp/build.jsp" tofile="[cbinfo.wwwroot.dir]/jsp/modules/adrsearch/build.jsp"/>
    <copyfile fromfile="[module:adrsearch.dir]/jsp/query.jsp" tofile="[cbinfo.wwwroot.dir]/jsp/modules/adrsearch/query.jsp"/>
+   <copyfile fromfile="[module:adrsearch.dir]/jsp/get.jsp" tofile="[cbinfo.wwwroot.dir]/jsp/modules/adrsearch/get.jsp"/>
 
   <makedir dir="[cbinfo.wwwroot.dir]/modules/adrsearch/js"/>
   <copyfile fromfile="[module:adrsearch.dir]/js/adrSearcher.js" tofile="[cbinfo.wwwroot.dir]/modules/adrsearch/js/adrSearcher.js"/>

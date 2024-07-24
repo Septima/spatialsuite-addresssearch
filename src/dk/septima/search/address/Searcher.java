@@ -9,6 +9,12 @@ import java.util.List;
 import com.carlbro.cbinfo.datasource.impl.postgis.PGEndpoint;
 
 public class Searcher {
+
+	public static List<SearchResult> get(String id, Connection connection, String endPointType) throws Exception {
+		String select = "select * from addressaccess where addressaccessid = '" + id +"'";
+		return createAddressSearchResults(connection, select);
+	}
+
 	
 	public static List<SearchResult> search(String input, Connection connection, int maxResults, String endPointType) throws Exception{
 		
